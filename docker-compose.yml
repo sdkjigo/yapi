@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  yapi:
+    build: .
+    restart: always
+    # 第一次启动使用
+    # command: sh -c "npm install --production --prefix /yapi/vendors && npm run install-server --prefix /yapi/vendors"
+    # 之后使用下面的命令
+    command: "node /yapi/vendors/server/app.js"
+    volumes:
+        - .:/yapi/vendors
+        - ./log:/yapi/log
+        - ./config.json:/yapi/config.json
+    ports: 
+      - 3000:3000
+  mongo:
+    image: mongo:latest
+    restart: always
+    volumes: 
+        - ./mongo-conf:/docker-entrypoint-initdb.d
+        - ./mongo/etc:/etc/mongo
+        - ./mongo/data/db:/data/db
+    healthcheck:
+      test: ["CMD", "netstat -anp | grep 27017"]
+      interval: 2m
+      timeout: 10s
+      retries: 3
