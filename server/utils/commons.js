@@ -103,7 +103,7 @@ exports.log = (msg, type) => {
   let logfile = path.join(yapi.WEBROOT_LOG, year + '-' + month + '.log');
 
   if (typeof msg === 'object') {
-    if (msg instanceof Error) msg = msg.message;
+    if (msg instanceof Error) msg = msg.message + ' ' + msg.cause + ' ' + msg.stack;
     else msg = JSON.stringify(msg);
   }
 
